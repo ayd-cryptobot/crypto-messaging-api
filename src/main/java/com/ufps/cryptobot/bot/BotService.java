@@ -3,6 +3,7 @@ package com.ufps.cryptobot.bot;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import com.ufps.cryptobot.contract.Message;
 import com.ufps.cryptobot.contract.Update;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ public class BotService {
         this.bot = new TelegramBot(token);
     }
 
-    public String sendMessage(String message) {
-        SendResponse response = bot.execute(new SendMessage(chatId, message));
+    public String sendMessage(Message message) {
+        SendResponse response = bot.execute(new SendMessage(chatId, message.getText()));
         return response.toString();
     }
 

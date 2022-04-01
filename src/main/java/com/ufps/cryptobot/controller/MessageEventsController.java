@@ -1,7 +1,7 @@
 package com.ufps.cryptobot.controller;
 
 import com.ufps.cryptobot.bot.BotService;
-import com.ufps.cryptobot.contract.SendMessage;
+import com.ufps.cryptobot.contract.Message;
 import com.ufps.cryptobot.contract.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +18,8 @@ public class MessageEventsController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody SendMessage message) {
-        String result = this.botService.sendMessage(message.getMsg());
+    public ResponseEntity<String> sendMessage(@RequestBody Message message) {
+        String result = this.botService.sendMessage(message);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
