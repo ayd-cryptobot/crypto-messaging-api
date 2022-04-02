@@ -4,11 +4,27 @@ info:
   version: "0.0.0"
   title: "CryptoBot Messaging API"
 paths:
+
+  /messages/update:
+    post:
+      summary: "Exposed endpoint used to push new messages sent by the user"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: "body"
+          name: "UpdateMessage"
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateMessageSchema"
+      responses:
+        '200':
+          description: OK
+
   /messages/news/send:
     post:
-      tags:
-        - Consumers
-      summary: "Exposed endpoint used to send news messages to a user"
+      summary: "Exposed endpoint used to send crypto news messages to a user"
       consumes:
         - application/json
       produces:
@@ -18,7 +34,7 @@ paths:
           name: "NewsMessage"
           required: true
           schema:
-            $ref: "#/definitions/NewsMessageSchema"
+            $ref: "#/definitions/NewsMessage"
       responses:
         '200':
           description: OK
@@ -27,11 +43,41 @@ paths:
           schema:
             $ref: "#/definitions/InternalServerErrorResponse"
 definitions:
-  NewsMessageSchema:
+  UpdateMessageSchema:
     type: "object"
     properties:
-      msg:
-        $ref: "#/definitions/NewsMessage"
+      update_id:
+        type: "integer"
+        format: "int64"
+        example: 1351
+      message:
+        $ref: "#/definitions/Message"
+
+  Message:
+    type: "object"
+    properties:
+      message_id:
+        type: "integer"
+        format: "int 64"
+        example: 23965
+      chat:
+        $ref: "#/definitions/Chat"
+      text:
+        type: "string"
+        format: "string"
+        example: "Hi crypto bot!"
+
+  Chat:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 67479
+      type:
+        type: "string"
+        format: "string"
+        example: "Private"
 
   NewsMessage:
     type: "object"

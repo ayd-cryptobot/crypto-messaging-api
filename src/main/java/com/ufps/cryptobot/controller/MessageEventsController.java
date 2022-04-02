@@ -1,7 +1,7 @@
 package com.ufps.cryptobot.controller;
 
-import com.ufps.cryptobot.bot.BotService;
-import com.ufps.cryptobot.contract.Message;
+import com.ufps.cryptobot.bot.NewsService;
+import com.ufps.cryptobot.contract.NewsMessage;
 import com.ufps.cryptobot.contract.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,21 +11,21 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("messages")
 public class MessageEventsController {
 
-    private BotService botService;
+    private NewsService newsService;
 
-    public MessageEventsController(BotService botService) {
-        this.botService = botService;
+    public MessageEventsController(NewsService botService) {
+        this.newsService = botService;
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody Message message) {
-        String result = this.botService.sendMessage(message);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @PostMapping("/news/send")
+    public ResponseEntity<String> sendNewsMessage(@RequestBody NewsMessage message) {
+        this.newsService.pushNew(message);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<String> getUpdate(@RequestBody Update update) {
-        this.botService.newUpdate(update);
-        return new ResponseEntity<>("ok",HttpStatus.OK);
+        this.newsService.newUpdate(update);
+        return new ResponseEntity<>("OK",HttpStatus.OK);
     }
 }

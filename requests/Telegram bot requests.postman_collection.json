@@ -6,34 +6,13 @@
 	},
 	"item": [
 		{
-			"name": "getMe",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://api.telegram.org/bot{{Token}}/getMe",
-					"protocol": "https",
-					"host": [
-						"api",
-						"telegram",
-						"org"
-					],
-					"path": [
-						"bot{{Token}}",
-						"getMe"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "getUpdates",
+			"name": "sendNewsMessageToUser",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"offset\":89315844\r\n}",
+					"raw": "{\r\n  \"chat_id\": 1801261524,\r\n  \"title\": \"Ethereum podría destronar al bitcoin en valor de mercado con su última actualización\",\r\n  \"link\": \"https://www.eleconomista.es/mercados-cotizaciones/noticias/11684467/03/22/Ethereum-podria-destronar-al-bitcoin-en-valor-de-mercado-con-su-ultima-actualizacion.html\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,67 +20,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.telegram.org/bot{{Token}}/getUpdates",
-					"protocol": "https",
-					"host": [
-						"api",
-						"telegram",
-						"org"
-					],
-					"path": [
-						"bot{{Token}}",
-						"getUpdates"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "sendMessageToBot",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"chat_id\": 1801261524,\r\n    \"text\": \"this is a test!\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://api.telegram.org/bot{{Token}}/sendMessage",
-					"protocol": "https",
-					"host": [
-						"api",
-						"telegram",
-						"org"
-					],
-					"path": [
-						"bot{{Token}}",
-						"sendMessage"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "sendMessageToUser",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"msg\": \"This is a message!!!! yeahhhh\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/messages/send",
+					"raw": "http://localhost:8080/messages/news/send",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -109,6 +28,7 @@
 					"port": "8080",
 					"path": [
 						"messages",
+						"news",
 						"send"
 					]
 				}
@@ -122,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"update_id\": 123,\r\n    \"message\":{\r\n        \"message_id\": 315,\r\n        \"chat\":{\r\n            \"id\": 1801261524,\r\n            \"type\": \"Private\"\r\n        },\r\n        \"text\": \"hola crypto bot!\"\r\n    }\r\n}",
+					"raw": "{\r\n    \"update_id\": 123,\r\n    \"message\":{\r\n        \"message_id\": 315,\r\n        \"chat\":{\r\n            \"id\": 1801261524,\r\n            \"type\": \"Private\"\r\n        },\r\n        \"text\": \"hola crypto bot! pronto estarás desplegado\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
