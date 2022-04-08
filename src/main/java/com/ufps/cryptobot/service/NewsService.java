@@ -1,4 +1,4 @@
-package com.ufps.cryptobot.bot;
+package com.ufps.cryptobot.service;
 
 import com.ufps.cryptobot.contract.Message;
 import com.ufps.cryptobot.contract.NewsMessage;

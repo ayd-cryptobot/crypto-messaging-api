@@ -1,4 +1,4 @@
-package com.ufps.cryptobot.Type;
+package com.ufps.cryptobot.enums;
 
 import com.google.gson.annotations.SerializedName;
 

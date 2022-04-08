@@ -1,6 +1,6 @@
 package com.ufps.cryptobot.contract;
 
-import com.ufps.cryptobot.Type.Type;
+import com.ufps.cryptobot.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
