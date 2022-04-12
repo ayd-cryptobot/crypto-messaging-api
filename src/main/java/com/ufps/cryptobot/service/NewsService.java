@@ -10,22 +10,13 @@ import org.springframework.stereotype.Service;
 public class NewsService {
 
     private Provider provider;
-    private final String moneyBagEmoji = "\uD83D\uDD14";
-    private final String flagIndicatorEmoji = "\uD83D\uDCCD";
 
     public NewsService(Provider provider) {
         this.provider = provider;
     }
 
-    public void pushNew(NewsMessage newsMessage) {
-        String title = moneyBagEmoji + newsMessage.getTitle();
-        String link = flagIndicatorEmoji + newsMessage.getLink();
-        String text = title + "\n" + link;
-        Message message = new Message(newsMessage.getChatID(), text);
-        this.provider.sendMessage(message);
-    }
-
-    public void newUpdate(Update update) {
+    //TODO solicitar mensaje a noticias
+    public void getNews(Update update) {
         String responseText = "did you just say: " + update.getMessage().getText();
         update.getMessage().setText(responseText);
         this.provider.sendMessage(update.getMessage());

@@ -1,6 +1,8 @@
 package com.ufps.cryptobot.controller;
 
-import com.ufps.cryptobot.service.BadRequestService;
+import com.ufps.cryptobot.contract.Message;
+import com.ufps.cryptobot.mapper.NewsMapper;
+import com.ufps.cryptobot.service.MessagingService;
 import com.ufps.cryptobot.service.NewsService;
 import com.ufps.cryptobot.contract.NewsMessage;
 import com.ufps.cryptobot.contract.Update;
@@ -13,32 +15,36 @@ import org.springframework.http.HttpStatus;
 public class MessageEventsController {
 
     private NewsService newsService;
-    private BadRequestService badRequestService;
+    private NewsMapper newsMapper;
+    private MessagingService messagingService;
 
     private final String getNewsCommand = "/getNews";
 
-    public MessageEventsController(NewsService newsService, BadRequestService badRequestService) {
+    public MessageEventsController(NewsService newsService, NewsMapper newsMapper, MessagingService badRequestService) {
         this.newsService = newsService;
-        this.badRequestService = badRequestService;
+        this.newsMapper = newsMapper;
+        this.messagingService = badRequestService;
     }
 
     @PostMapping("/news/send")
-    public ResponseEntity<String> sendNewsMessage(@RequestBody NewsMessage message) {
-        this.newsService.pushNew(message);
+    public ResponseEntity<String> sendNewsMessage(@RequestBody NewsMessage newsMessage) {
+        Message message = this.newsMapper.NewsMessageToMessage(newsMessage);
+
+        this.messagingService.pushMessageToUser(message);
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<String> getUpdate(@RequestBody Update update) {
-        switch (update.getMessage().getText()){
+        switch (update.getMessage().getText()) {
             case getNewsCommand:
-                this.newsService.newUpdate(update);
+                this.newsService.getNews(update);
                 break;
             default:
-                this.badRequestService.pushUnrecognizedCommand(update);
+                this.messagingService.pushUnrecognizedCommand(update);
         }
 
-        return new ResponseEntity<>("OK",HttpStatus.OK);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }
