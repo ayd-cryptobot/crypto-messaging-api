@@ -8,10 +8,11 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class NewsMessage {
     @JsonAlias("chat_id")
-    private Long chatID;
+    private Integer chatID;
     private String title;
     private String link;
 }

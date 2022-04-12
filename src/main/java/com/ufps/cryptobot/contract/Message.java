@@ -7,13 +7,15 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class Message {
     private Integer message_id;
+    private Integer date;
     private Chat chat;
     private String text;
 
-    public Message(Long chatId, String text) {
+    public Message(Integer chatId, String text) {
         this.chat = new Chat(chatId);
         this.text = text;
     }

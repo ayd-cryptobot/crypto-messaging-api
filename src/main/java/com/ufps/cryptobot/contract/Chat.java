@@ -1,6 +1,5 @@
 package com.ufps.cryptobot.contract;
 
-import com.ufps.cryptobot.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter @Setter
 public class Chat {
-    private Long id;
-    private Type type;
+    private Integer id;
+    private String type;
 
-    public Chat(Long id) {
+    public Chat(Integer id) {
         this.id = id;
     }
 }

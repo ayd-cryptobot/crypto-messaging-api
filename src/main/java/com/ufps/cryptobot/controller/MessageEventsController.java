@@ -18,7 +18,7 @@ public class MessageEventsController {
     private NewsMapper newsMapper;
     private MessagingService messagingService;
 
-    private final String getNewsCommand = "/getNews";
+    private final String getNewsCommand = "/getnews";
 
     public MessageEventsController(NewsService newsService, NewsMapper newsMapper, MessagingService badRequestService) {
         this.newsService = newsService;
