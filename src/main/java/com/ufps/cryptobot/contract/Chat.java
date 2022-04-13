@@ -9,10 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter @Setter
 public class Chat {
-    private Integer id;
+    private Long id;
     private String type;
 
-    public Chat(Integer id) {
+    public Chat(Long id) {
         this.id = id;
     }
 }

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class NewsMessage {
     @JsonAlias("chat_id")
-    private Integer chatID;
+    private Long chatID;
     private String title;
     private String link;
 }

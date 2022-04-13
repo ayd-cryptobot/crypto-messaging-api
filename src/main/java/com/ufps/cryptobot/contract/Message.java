@@ -15,7 +15,7 @@ public class Message {
     private Chat chat;
     private String text;
 
-    public Message(Integer chatId, String text) {
+    public Message(Long chatId, String text) {
         this.chat = new Chat(chatId);
         this.text = text;
     }
