@@ -2,14 +2,14 @@ package com.ufps.cryptobot.service;
 
 import com.ufps.cryptobot.contract.Message;
 import com.ufps.cryptobot.contract.Update;
-import com.ufps.cryptobot.telegram.Provider;
+import com.ufps.cryptobot.controller.MessagingServiceI;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessagingService {
-    private Provider provider;
+public class MessagingService implements MessagingServiceI {
+    private MessagingProviderI provider;
 
-    public MessagingService(Provider provider) {
+    public MessagingService(MessagingProviderI provider) {
         this.provider = provider;
     }
 
