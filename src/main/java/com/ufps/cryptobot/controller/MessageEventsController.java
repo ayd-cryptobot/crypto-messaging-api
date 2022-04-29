@@ -12,16 +12,22 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("messages")
 public class MessageEventsController {
 
-    private NewsServiceI newsService;
     private NewsMapper newsMapper;
+    private NewsServiceI newsService;
     private MessagingServiceI messagingService;
+    private ExchangeServiceI exchangeService;
 
     private final String getNewsCommand = "/getnews";
+    private final String top10CryptoUSD = "/top10cryptousd";
+    private final String top10CryptoCOP = "/top10cryptocop";
+    private final String getBitcoin = "/getbitcoin";
 
-    public MessageEventsController(NewsServiceI newsService, NewsMapper newsMapper, MessagingServiceI badRequestService) {
-        this.newsService = newsService;
+    public MessageEventsController(NewsMapper newsMapper, NewsServiceI newsService, MessagingServiceI messagingService,
+                                   ExchangeServiceI exchangeService) {
         this.newsMapper = newsMapper;
-        this.messagingService = badRequestService;
+        this.newsService = newsService;
+        this.messagingService = messagingService;
+        this.exchangeService = exchangeService;
     }
 
     @PostMapping("/news/send")
@@ -38,6 +44,15 @@ public class MessageEventsController {
         switch (update.getMessage().getText()) {
             case getNewsCommand:
                 this.newsService.getNews(update);
+                break;
+            case top10CryptoUSD:
+                //TODO
+                break;
+            case top10CryptoCOP:
+                //TODO
+                break;
+            case getBitcoin:
+                //TODO
                 break;
             default:
                 this.messagingService.pushUnrecognizedCommand(update);
