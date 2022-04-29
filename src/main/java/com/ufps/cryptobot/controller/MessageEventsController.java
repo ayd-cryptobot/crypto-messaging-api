@@ -46,13 +46,13 @@ public class MessageEventsController {
                 this.newsService.getNews(update);
                 break;
             case top10CryptoUSD:
-                //TODO
+                this.exchangeService.top10Crypto(update, "USD");
                 break;
             case top10CryptoCOP:
-                //TODO
+                this.exchangeService.top10Crypto(update, "COP");
                 break;
             case getBitcoin:
-                //TODO
+                this.exchangeService.getBitcoin(update, "USD");
                 break;
             default:
                 this.messagingService.pushUnrecognizedCommand(update);

@@ -14,6 +14,7 @@ public class NewsService implements NewsServiceI {
     }
 
     //TODO solicitar mensaje a noticias
+    @Override
     public void getNews(Update update) {
         String responseText = "did you just say: " + update.getMessage().getText();
         update.getMessage().setText(responseText);

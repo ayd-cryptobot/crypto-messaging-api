@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class Provider implements MessagingProviderI {
 
     private final TelegramBot bot;
-    private String token = "5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o";
+    private String token = System.getenv("BOT_TOKEN");
 
     public Provider() {
         this.bot = new TelegramBot(token);
