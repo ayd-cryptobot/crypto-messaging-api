@@ -4,20 +4,19 @@ import com.ufps.cryptobot.contract.Update;
 import com.ufps.cryptobot.controller.NewsServiceI;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 public class NewsService implements NewsServiceI {
 
-    private MessagingProviderI provider;
+    private PubSubClientI pubSubClient;
 
-    public NewsService(MessagingProviderI provider) {
-        this.provider = provider;
+    public NewsService(PubSubClientI pubSubClientI) {
+        this.pubSubClient = pubSubClientI;
     }
 
-    //TODO solicitar mensaje a noticias
     @Override
-    public void getNews(Update update) {
-        String responseText = "did you just say: " + update.getMessage().getText();
-        update.getMessage().setText(responseText);
-        this.provider.sendMessage(update.getMessage());
+    public void getNews(Update update) throws InterruptedException, IOException {
+        this.pubSubClient.publishMessage(update.getMessage().getText());
     }
 }
