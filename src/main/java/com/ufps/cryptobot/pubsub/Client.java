@@ -11,8 +11,8 @@ import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.TopicName;
 import com.ufps.cryptobot.service.PubSubClientI;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -27,13 +27,13 @@ public class Client implements PubSubClientI {
         this.topicName = TopicName.of(this.projectID, this.topicID);
     }
 
-    public void publishMessage(String message) throws IOException, InterruptedException {
+    public void publishMessage(String message, Map<String, String> tags) throws IOException, InterruptedException {
         Publisher publisher = null;
         try {
             publisher = Publisher.newBuilder(topicName).build();
 
             ByteString data = ByteString.copyFromUtf8(message);
-            PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
+            PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).putAllAttributes(tags).build();
 
             ApiFuture<String> future = publisher.publish(pubsubMessage);
 

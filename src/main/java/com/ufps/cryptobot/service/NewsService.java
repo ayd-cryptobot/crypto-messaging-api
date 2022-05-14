@@ -5,6 +5,8 @@ import com.ufps.cryptobot.controller.NewsServiceI;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class NewsService implements NewsServiceI {
@@ -17,6 +19,7 @@ public class NewsService implements NewsServiceI {
 
     @Override
     public void getNews(Update update) throws InterruptedException, IOException {
-        this.pubSubClient.publishMessage(update.getMessage().getText());
+        Map<String, String> tags = Map.of("module", "news");
+        this.pubSubClient.publishMessage(update.getMessage().getText(), tags);
     }
 }
