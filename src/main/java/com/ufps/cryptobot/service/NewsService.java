@@ -1,11 +1,12 @@
 package com.ufps.cryptobot.service;
 
+import org.json.simple.JSONObject;
+import com.ufps.cryptobot.contract.Chat;
 import com.ufps.cryptobot.contract.Update;
 import com.ufps.cryptobot.controller.NewsServiceI;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -19,7 +20,12 @@ public class NewsService implements NewsServiceI {
 
     @Override
     public void getNews(Update update) throws InterruptedException, IOException {
+        JSONObject obj = new JSONObject();
+        obj.put("chat_id", update.getMessage().getChat().getId());
+        String message = obj.toString();
+
         Map<String, String> tags = Map.of("module", "news");
-        this.pubSubClient.publishMessage(update.getMessage().getText(), tags);
+
+        this.pubSubClient.publishMessage(message, tags);
     }
 }

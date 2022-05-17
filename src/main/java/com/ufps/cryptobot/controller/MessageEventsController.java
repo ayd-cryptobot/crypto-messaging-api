@@ -1,9 +1,11 @@
 package com.ufps.cryptobot.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.gax.rpc.ApiException;
+import com.ufps.cryptobot.contract.Event;
 import com.ufps.cryptobot.contract.Message;
+import com.ufps.cryptobot.contract.PubSubMessage;
 import com.ufps.cryptobot.mapper.NewsMapper;
-import com.ufps.cryptobot.contract.NewsMessage;
 import com.ufps.cryptobot.contract.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +36,13 @@ public class MessageEventsController {
     }
 
     @PostMapping("/news/send")
-    public ResponseEntity<String> sendNewsMessage(@RequestBody NewsMessage newsMessage) {
-        Message message = this.newsMapper.NewsMessageToMessage(newsMessage);
-
-        this.messagingService.pushMessageToUser(message);
+    public ResponseEntity<String> sendNewsMessage(@RequestBody PubSubMessage pubSubMessage) {
+        try {
+            Message message = this.newsMapper.NewsMessageEventToMessage(pubSubMessage.getEvent());
+            this.messagingService.pushMessageToUser(message);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>("fail during JSON parsing", HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
