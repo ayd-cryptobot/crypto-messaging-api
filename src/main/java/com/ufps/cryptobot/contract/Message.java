@@ -13,6 +13,7 @@ public class Message {
     private Integer message_id;
     private Integer date;
     private Chat chat;
+    private User from;
     private String text;
 
     public Message(Long chatId, String text) {
