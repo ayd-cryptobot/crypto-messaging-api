@@ -11,29 +11,37 @@ import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.TopicName;
 import com.ufps.cryptobot.service.PubSubClientI;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class Client implements PubSubClientI {
     private String projectID;
-    private String topicID;
-    private TopicName topicName;
+    private String newsTopicID;
+    private TopicName newsTopicName;
+    private String exchangeTopicID;
+    private TopicName exchangeTopicName;
 
     public Client() {
         this.projectID = System.getenv("PROJECT_ID");
-        this.topicID = System.getenv("TOPIC_ID");
-        this.topicName = TopicName.of(this.projectID, this.topicID);
+        this.newsTopicID = System.getenv("NEWS_TOPIC_ID");
+        this.newsTopicName = TopicName.of(this.projectID, this.newsTopicID);
+        this.exchangeTopicID = System.getenv("EXCHANGE_TOPIC_ID");
+        this.exchangeTopicName = TopicName.of(this.projectID, this.exchangeTopicID);
     }
 
-    public void publishMessage(String message, Map<String, String> tags) throws IOException, InterruptedException {
+    public void publishMessage(String message, String topic) throws IOException, InterruptedException {
         Publisher publisher = null;
         try {
-            publisher = Publisher.newBuilder(topicName).build();
+            if (topic == "news") {
+                publisher = Publisher.newBuilder(newsTopicName).build();
+            } else {
+                publisher = Publisher.newBuilder(exchangeTopicName).build();
+            }
 
             ByteString data = ByteString.copyFromUtf8(message);
-            PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).putAllAttributes(tags).build();
+            PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
             ApiFuture<String> future = publisher.publish(pubsubMessage);
 

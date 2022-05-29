@@ -19,7 +19,6 @@ public class NewsMapper {
     }
 
     public Message NewsMessageEventToMessage(Event newsMessageEvent) throws JsonProcessingException {
-
         byte[] decodedBytes = Base64.getDecoder().decode(newsMessageEvent.getData());
 
         String decodedString = new String(decodedBytes);

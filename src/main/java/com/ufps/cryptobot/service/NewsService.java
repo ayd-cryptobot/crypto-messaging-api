@@ -1,7 +1,6 @@
 package com.ufps.cryptobot.service;
 
 import org.json.simple.JSONObject;
-import com.ufps.cryptobot.contract.Chat;
 import com.ufps.cryptobot.contract.Update;
 import com.ufps.cryptobot.controller.NewsServiceI;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,6 @@ public class NewsService implements NewsServiceI {
         obj.put("chat_id", update.getMessage().getChat().getId());
         String message = obj.toString();
 
-        Map<String, String> tags = Map.of("module", "news");
-
-        this.pubSubClient.publishMessage(message, tags);
+        this.pubSubClient.publishMessage(message, "news");
     }
 }

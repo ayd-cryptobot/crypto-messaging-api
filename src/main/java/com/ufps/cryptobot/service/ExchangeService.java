@@ -8,8 +8,13 @@ import com.ufps.cryptobot.persistence.entity.CryptoUser;
 import com.ufps.cryptobot.persistence.entity.User;
 import com.ufps.cryptobot.persistence.repository.CryptoRepository;
 import com.ufps.cryptobot.persistence.repository.CryptoUserRepository;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,39 +23,55 @@ public class ExchangeService implements ExchangeServiceI {
     private final String trackingSuccessfullyConfiguredMessage = "Confirmado! te estaré informando sobre el precio de ";
     private final String deleteTrackingSuggestionMessage = "Si quieres dejar de darle seguimiento a la moneda, ejecuta nuevamente el comando";
     private final String deleteTrackOfACryptoMessage = "¡confirmado! ya no te brindaré seguimiento de la moneda ";
+    private final String notFollowingAnyCryptoMessage = "No estas haciendo seguimiento a ninguna criptomoneda. Selecciona una de tu interés y te mantendré al día!";
 
     private MessagingProviderI provider;
     private CryptoUserRepository cryptoUserRepository;
     private CryptoRepository cryptoRepository;
+    private PubSubClientI pubSubClient;
 
-    public ExchangeService(MessagingProviderI provider, CryptoUserRepository cryptoUserRepository, CryptoRepository cryptoRepository) {
+    public ExchangeService(MessagingProviderI provider, CryptoUserRepository cryptoUserRepository, CryptoRepository cryptoRepository,
+                           PubSubClientI pubSubClient) {
         this.provider = provider;
         this.cryptoUserRepository = cryptoUserRepository;
         this.cryptoRepository = cryptoRepository;
+        this.pubSubClient = pubSubClient;
     }
 
     @Override
-    public void getCryptoValue(Update update, String crypto, String currency, int nDaysAgo) {
-        String message = crypto + " at: " + "40000 " + currency;
+    public void getCryptoValue(Update update, String crypto, String currency, int nDaysAgo) throws IOException, InterruptedException {
+        JSONArray ja = new JSONArray();
+        ja.add(crypto);
 
-        this.sendMessageToUser(update.getMessage().getFrom().getId(), message);
+        JSONObject obj = new JSONObject();
+        obj.put("chat_id", update.getMessage().getFrom().getId());
+        obj.put("cryptos", ja);
+        obj.put("rango", nDaysAgo);
+        String message = obj.toString();
+
+        this.pubSubClient.publishMessage(message, "exchange");
     }
 
     @Override
-    public void getMyCrypto(Update update, String toCurrency) {
-        String message = "Currency: " + toCurrency + "\n" +
-                "Bitcoin: 40000\n" +
-                "Ethereum: 3000\n" +
-                "DogeCoin: 0.1\n" +
-                "Cardano: 1.2\n" +
-                "LiteCoin: 10\n" +
-                "BinanceCoin: 500\n" +
-                "Tether: 1\n" +
-                "Solana:100\n" +
-                "BitcoinCash: 5325\n" +
-                "Terra: 303";
+    public void getMyCrypto(User user, String toCurrency) throws IOException, InterruptedException {
+        List<CryptoUser> currencies = this.cryptoUserRepository.findByUser_Id(user.getId());
+        if (currencies.size() == 0) {
+            this.sendMessageToUser(user.getId(), notFollowingAnyCryptoMessage);
+            return;
+        }
 
-        this.sendMessageToUser(update.getMessage().getFrom().getId(), message);
+        JSONArray ja = new JSONArray();
+        for (CryptoUser cu : currencies) {
+            ja.add(cu.getCrypto().getName());
+        }
+
+        JSONObject obj = new JSONObject();
+        obj.put("chat_id", user.getId());
+        obj.put("cryptos", ja);
+        obj.put("rango", 0);
+        String message = obj.toString();
+
+        this.pubSubClient.publishMessage(message, "exchange");
     }
 
     @Override

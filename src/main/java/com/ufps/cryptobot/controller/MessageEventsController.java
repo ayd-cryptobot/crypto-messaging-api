@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.gax.rpc.ApiException;
 import com.ufps.cryptobot.contract.Message;
 import com.ufps.cryptobot.contract.PubSubMessage;
+import com.ufps.cryptobot.mapper.ExchangeMapper;
 import com.ufps.cryptobot.mapper.NewsMapper;
 import com.ufps.cryptobot.contract.Update;
 import com.ufps.cryptobot.persistence.entity.User;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("messages")
 public class MessageEventsController {
 
     private NewsMapper newsMapper;
+    private ExchangeMapper exchangeMapper;
 
     private UsersServiceI usersServiceI;
 
@@ -43,9 +44,10 @@ public class MessageEventsController {
     private final String SOL = "SOL";
 
 
-    public MessageEventsController(NewsMapper newsMapper, UsersServiceI usersServiceI, NewsServiceI newsService,
-                                   MessagingServiceI messagingService, ExchangeServiceI exchangeService) {
+    public MessageEventsController(NewsMapper newsMapper, ExchangeMapper exchangeMapper, UsersServiceI usersServiceI,
+                                   NewsServiceI newsService, MessagingServiceI messagingService, ExchangeServiceI exchangeService) {
         this.newsMapper = newsMapper;
+        this.exchangeMapper = exchangeMapper;
         this.usersServiceI = usersServiceI;
         this.newsService = newsService;
         this.messagingService = messagingService;
@@ -64,6 +66,20 @@ public class MessageEventsController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+    @PostMapping("exchange/send")
+    public ResponseEntity<String> sendExchangeMessage(@RequestBody PubSubMessage pubSubMessage) {
+        try {
+            Message message = this.exchangeMapper.ExchangeMessageEventToMessage(pubSubMessage.getEvent());
+            this.messagingService.pushMessageToUser(message);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException i){
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
     @PostMapping("/update")
     public ResponseEntity<String> getUpdate(@RequestBody Update update) {
         User user = this.usersServiceI.findUser(update.getMessage().getFrom());
@@ -74,13 +90,13 @@ public class MessageEventsController {
                     this.newsService.getNews(update);
                     break;
                 case getCrypto:
-                    this.exchangeService.getMyCrypto(update, "USD");
+                    this.exchangeService.getMyCrypto(user, "USD");
                     break;
                 case getBitcoin:
-                    this.exchangeService.getCryptoValue(update, BTC, "USD", 0);
+                    this.exchangeService.getCryptoValue(update, "bitcoin", "USD", 7);
                     break;
                 case getEthereum:
-                    this.exchangeService.getCryptoValue(update, ETH, "USD", 0);
+                    this.exchangeService.getCryptoValue(update, "ethereum", "USD", 7);
                     break;
                 case registerBTC:
                     this.exchangeService.registerCrypto(user, BTC);
