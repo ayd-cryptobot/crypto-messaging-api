@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Created-By: IntelliJ IDEA
-Built-By: jmoncada
-Build-Jdk: version 11.0.2
-Implementation-Title: crypto-bot
-Implementation-Version: 0.0.1-SNAPSHOT
-Implementation-Vendor-Id: com.ufps
-Main-Class: ${start-class}
-
