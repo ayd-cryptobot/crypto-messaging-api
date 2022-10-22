@@ -6,15 +6,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class CryptoBotApplication extends SpringBootServletInitializer {
+public class CryptoBotApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CryptoBotApplication.class, args);
     }
-
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
-    {
-        return application.sources(CryptoBotApplication.class);
-    }
-
 }

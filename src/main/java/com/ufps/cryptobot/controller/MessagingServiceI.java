@@ -1,9 +1,9 @@
 package com.ufps.cryptobot.controller;
 
-import com.ufps.cryptobot.contract.Message;
-import com.ufps.cryptobot.contract.Update;
+import com.ufps.cryptobot.provider.telegram.contract.Message;
+import com.ufps.cryptobot.provider.telegram.contract.Update;
 
 public interface MessagingServiceI {
-    void pushMessageToUser(Message message);
-    void pushUnrecognizedCommand(Update update);
+    void sendMessageToUser(Message message);
+    void sendHomeKeyboard(Update update);
 }
