@@ -1,4 +1,4 @@
-package com.ufps.cryptobot.domain.service;
+package com.ufps.cryptobot.domain.service.accounts;
 
 import com.ufps.cryptobot.controller.rest.contract.AccountEvent;
 import com.ufps.cryptobot.provider.telegram.contract.User;
@@ -27,7 +27,7 @@ public class AccountsService implements AccountsServiceI {
     @Override
     public void saveAccount(AccountEvent accountEvent) {
         com.ufps.cryptobot.domain.persistence.entity.User user = new com.ufps.cryptobot.domain.persistence.entity.User(
-                accountEvent.getTelegramID(), accountEvent.getFirstName(), accountEvent.getLastName(),accountEvent.getUsername());
+                accountEvent.getTelegramID(), accountEvent.getFirstName(), accountEvent.getLastName(), accountEvent.getUsername());
 
         this.userRepository.save(user);
     }

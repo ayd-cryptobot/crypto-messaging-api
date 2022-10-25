@@ -12,4 +12,3 @@ CREATE TABLE `micromessaging`.`user` (
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
-
