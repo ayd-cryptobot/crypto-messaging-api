@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class Client implements PubSubClientI {
+public class Client {
     private String projectID;
     private String newsTopicID;
     private TopicName newsTopicName;

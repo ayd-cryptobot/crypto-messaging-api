@@ -6,21 +6,29 @@ import com.ufps.cryptobot.controller.AccountsServiceI;
 import com.ufps.cryptobot.domain.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
 public class AccountsService implements AccountsServiceI {
 
     private UserRepository userRepository;
+    private AccountsHTTPRequesterI accountsHTTPRequester;
 
-    public AccountsService(UserRepository userRepository) {
+    public AccountsService(UserRepository userRepository, AccountsHTTPRequesterI accountsHTTPRequester) {
         this.userRepository = userRepository;
+        this.accountsHTTPRequester = accountsHTTPRequester;
     }
 
     @Override
     public void callAccountsToRegisterAccount(User user) {
-        if (this.userRepository.existsByTelegramID(user.getId())) {
-            //TODO Send HTTP query
+        if (!this.userRepository.existsByTelegramID(user.getId())) {
+            try {
+                this.accountsHTTPRequester.createAccount(user);
+            } catch (IOException e) {
+                System.out.println("Error while sending http creation account request");
+                //TODO verify if returning an error or not
+            }
         }
     }
 
