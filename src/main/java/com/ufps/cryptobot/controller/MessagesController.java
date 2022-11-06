@@ -11,7 +11,9 @@ import com.ufps.cryptobot.domain.consts.TelegramCommands;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("messaging")
@@ -24,11 +26,11 @@ public class MessagesController {
     private ExchangeServiceI exchangeServiceI;
 
 
-    public MessagesController(AccountsServiceI usersServiceI, MessagingServiceI messagingService,
-                              PubSubEventMapper pubSubEventMapper) {
-        this.accountsServiceI = usersServiceI;
-        this.messagingService = messagingService;
+    public MessagesController(PubSubEventMapper pubSubEventMapper, AccountsServiceI accountsServiceI, MessagingServiceI messagingService, ExchangeServiceI exchangeServiceI) {
         this.pubSubEventMapper = pubSubEventMapper;
+        this.accountsServiceI = accountsServiceI;
+        this.messagingService = messagingService;
+        this.exchangeServiceI = exchangeServiceI;
     }
 
     @PostMapping("/message/send")
@@ -54,8 +56,6 @@ public class MessagesController {
     public ResponseEntity<String> getUpdate(@RequestBody Update update) {
         try {
             switch (update.getMessage().getText()) {
-                case TelegramCommands.startCommand:
-                    this.accountsServiceI.callAccountsToRegisterAccount(update.getMessage().getFrom());
                 case TelegramCommands.manageCryptosMessage:
                     //TODO manage login and return redirection
                     break;
@@ -81,12 +81,17 @@ public class MessagesController {
                 case TelegramCommands.polkadot:
                 case TelegramCommands.ripple:
                     this.exchangeServiceI.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
+                    this.messagingService.sendHomeKeyboard(update.getMessage());
                     break;
+                case TelegramCommands.startCommand:
+                    this.accountsServiceI.callAccountsToRegisterAccount(update.getMessage().getFrom());
                 default:
                     this.messagingService.sendHomeKeyboard(update.getMessage());
             }
         } catch (ApiException e) {
             return new ResponseEntity<>("Error publishing message", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>("OK", HttpStatus.OK);

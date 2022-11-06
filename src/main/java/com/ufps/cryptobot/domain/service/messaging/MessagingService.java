@@ -19,7 +19,7 @@ public class MessagingService implements MessagingServiceI {
 
     private final String[][] replyHomeKeyboardTemplate = {
             {"Manage my cryptos", "Manage my account"},
-            {"Check Historical price of a crypto", "Check news of a crypto"}
+            {"Check historical price of a crypto", "Check news of a crypto"}
     };
 
     private final String[][] cryptosKeyboardTemplate = {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufps.cryptobot.domain.rest.contract.CreateAccount;
 import com.ufps.cryptobot.domain.service.accounts.AccountsHTTPRequesterI;
 import com.ufps.cryptobot.provider.telegram.contract.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -24,8 +25,7 @@ public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
     }
 
     public void createAccount(User user) throws IOException {
-        //String url = accountsHost + createAccountEndpoint;
-        String url = "https://run.mocky.io/v3/3622207a-e323-488c-bb6e-ac923709b357";
+        String url = accountsHost + createAccountEndpoint;
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
@@ -41,15 +41,22 @@ public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
         os.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println("POST Response Code :: " + responseCode);
+        System.out.println("Create account POST Response Code :: " + responseCode);
 
-        //TODO validate more status codes
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            System.out.println("POST request got a bad response");
-            //TODO throw exception
+        this.validateResponse(responseCode);
+    }
+
+    public void validateResponse(int responseCode) throws RuntimeException {
+        if (responseCode == HttpStatus.ALREADY_REPORTED.value()) {
+            System.out.println("Account already created");
             return;
         }
+        if (responseCode != HttpStatus.OK.value()) {
+            System.out.println("create account POST request got a bad response");
 
-        System.out.println("account created");
+            throw new RuntimeException("Bad status code response: " + responseCode);
+        }
+
+        System.out.println("Account created");
     }
 }

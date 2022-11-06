@@ -1,5 +1,6 @@
 package com.ufps.cryptobot.domain.service.accounts;
 
+import com.sun.jdi.event.ExceptionEvent;
 import com.ufps.cryptobot.controller.rest.contract.AccountEvent;
 import com.ufps.cryptobot.provider.telegram.contract.User;
 import com.ufps.cryptobot.controller.AccountsServiceI;
@@ -21,14 +22,9 @@ public class AccountsService implements AccountsServiceI {
     }
 
     @Override
-    public void callAccountsToRegisterAccount(User user) {
+    public void callAccountsToRegisterAccount(User user) throws IOException {
         if (!this.userRepository.existsByTelegramID(user.getId())) {
-            try {
-                this.accountsHTTPRequester.createAccount(user);
-            } catch (IOException e) {
-                System.out.println("Error while sending http creation account request");
-                //TODO verify if returning an error or not
-            }
+            this.accountsHTTPRequester.createAccount(user);
         }
     }
 

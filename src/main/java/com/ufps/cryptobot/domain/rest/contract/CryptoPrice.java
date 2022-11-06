@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class QueryHistoricalPrice {
-    private String crypto;
-    private int dateRange;
+@NoArgsConstructor
+public class CryptoPrice {
+    private String date;
+    private int price;
 }

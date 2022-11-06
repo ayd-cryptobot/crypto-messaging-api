@@ -1,12 +1,14 @@
 package com.ufps.cryptobot.domain.service.exchange;
 
 import com.ufps.cryptobot.controller.ExchangeServiceI;
+import com.ufps.cryptobot.domain.rest.contract.CryptoPrice;
+import com.ufps.cryptobot.domain.rest.contract.HistoricalPriceResponse;
 import com.ufps.cryptobot.domain.rest.contract.QueryHistoricalPrice;
 import com.ufps.cryptobot.domain.service.messaging.MessagingProviderI;
 import com.ufps.cryptobot.provider.telegram.contract.Message;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
+import java.io.IOException;
 
 @Service
 public class ExchangeService implements ExchangeServiceI {
@@ -20,13 +22,19 @@ public class ExchangeService implements ExchangeServiceI {
     }
 
     @Override
-    public void cryptoHistoricalPrice(Message message, String crypto) {
-        //TODO calculate query dates (initial date - final date)
+    public void cryptoHistoricalPrice(Message message, String crypto) throws IOException {
+        QueryHistoricalPrice queryHistoricalPrice = new QueryHistoricalPrice(crypto, 7);
 
-        //TODO HTTP query prices
-        QueryHistoricalPrice queryHistoricalPrice = new QueryHistoricalPrice(crypto);
-        this.exchangeHTTPRequester.queryHistoricalPrice(queryHistoricalPrice);
+        HistoricalPriceResponse historicalPrice = this.exchangeHTTPRequester.queryHistoricalPrice(queryHistoricalPrice);
 
+        String txt = "CRYPTO: " + historicalPrice.getName() + "\n" +
+                "CURRENCY PAIR: " + historicalPrice.getCurrencyPair() + "\n";
+        for (int i = 0; i < historicalPrice.getHistoricPrice().length; i++) {
+            CryptoPrice cryptoPrice = historicalPrice.getHistoricPrice()[i];
+            txt = txt + cryptoPrice.getDate() + " -> " + cryptoPrice.getPrice() + "\n";
+        }
+
+        message.setText(txt);
         this.messagingProvider.sendMessage(message, null);
     }
 }
