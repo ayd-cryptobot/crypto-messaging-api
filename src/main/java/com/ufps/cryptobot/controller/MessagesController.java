@@ -8,12 +8,20 @@ import com.ufps.cryptobot.provider.telegram.contract.Message;
 import com.ufps.cryptobot.provider.pubsub.contract.PubSubMessage;
 import com.ufps.cryptobot.provider.telegram.contract.Update;
 import com.ufps.cryptobot.domain.consts.TelegramCommands;
+import org.apache.commons.codec.binary.Hex;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("messaging")
@@ -45,6 +53,7 @@ public class MessagesController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/message/diffuse")
     public ResponseEntity<String> diffuseMessage(@Valid @RequestBody DiffuseMessage messageToDiffuse) {
         this.messagingService.diffuseMessage(messageToDiffuse);
@@ -67,8 +76,6 @@ public class MessagesController {
                     break;
                 case TelegramCommands.checkNewsOfACrypto:
                     //TODO return redirection to the news
-                    //update.getMessage().setText("google.com");
-                    //this.messagingService.sendMessageToUser(update.getMessage());
                     this.messagingService.sendInlineKeyboard(update.getMessage());
                     break;
                 case TelegramCommands.bitcoin:
@@ -95,5 +102,49 @@ public class MessagesController {
         }
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<Object> telegramAuth(@RequestParam String id, @RequestParam(name = "first_name") String firstName,
+                                               @RequestParam String username, @RequestParam(name = "auth_date") String authDate,
+                                               @RequestParam String hash) {
+        String dataCheckString = "auth_date=" + authDate + "\n" +
+                "first_name=" + firstName + "\n" +
+                "id=" + id + "\n" +
+                "username=" + username;
+
+        try {
+            SecretKeySpec secretKey = new SecretKeySpec(
+                    MessageDigest.getInstance("SHA-256").digest("5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o".getBytes(StandardCharsets.UTF_8)
+                    ), "HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(secretKey);
+
+            byte[] result = mac.doFinal(dataCheckString.getBytes(StandardCharsets.UTF_8));
+
+            String resultStr = this.bytesToHex(result);
+
+            if (hash.equals(resultStr)) {
+                System.out.println("auth successfully done");
+            } else {
+                return new ResponseEntity<>("OK", HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok("ok");
+    }
+
+    private String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 }
