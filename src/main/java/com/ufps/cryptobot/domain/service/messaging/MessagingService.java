@@ -74,17 +74,15 @@ public class MessagingService implements MessagingServiceI {
     }
 
     @Override
-    public void sendInlineKeyboard(Message message) {
-        message.setText("news");
+    public void sendLoginInlineKeyboard(Message message, String text) {
+        message.setText(text);
 
         Keyboard keyboard = new InlineKeyboardMarkup(
-                //new InlineKeyboardButton("url").url("google.com")
-                new InlineKeyboardButton("List of news").loginUrl(
+                new InlineKeyboardButton("login").loginUrl(
                         new LoginUrl("https://e4c3-181-132-0-23.ngrok.io/messaging/login")
                                 .botUsername("@UfpsTestBot")
                 )
         );
-
 
         this.provider.sendMessage(message, keyboard);
     }

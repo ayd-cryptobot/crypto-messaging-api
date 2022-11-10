@@ -10,7 +10,7 @@ public interface MessagingServiceI {
 
     void sendCryptosKeyboard(Message message);
 
-    void sendInlineKeyboard(Message message);
+    void sendLoginInlineKeyboard(Message message, String text);
 
     void diffuseMessage(DiffuseMessage diffuseMessage);
 }

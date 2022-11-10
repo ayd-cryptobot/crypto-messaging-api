@@ -8,7 +8,6 @@ import com.ufps.cryptobot.provider.telegram.contract.Message;
 import com.ufps.cryptobot.provider.pubsub.contract.PubSubMessage;
 import com.ufps.cryptobot.provider.telegram.contract.Update;
 import com.ufps.cryptobot.domain.consts.TelegramCommands;
-import org.apache.commons.codec.binary.Hex;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("messaging")
@@ -67,16 +63,17 @@ public class MessagesController {
             switch (update.getMessage().getText()) {
                 case TelegramCommands.manageCryptosMessage:
                     //TODO manage login and return redirection
+                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your cryptos here");
                     break;
                 case TelegramCommands.manageAccountMessage:
                     //TODO manage login and return redirection
+                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your account");
                     break;
                 case TelegramCommands.checkHistoricalPriceOfACryptoMessage:
                     this.messagingService.sendCryptosKeyboard(update.getMessage());
                     break;
                 case TelegramCommands.checkNewsOfACrypto:
                     //TODO return redirection to the news
-                    this.messagingService.sendInlineKeyboard(update.getMessage());
                     break;
                 case TelegramCommands.bitcoin:
                 case TelegramCommands.ethereum:
