@@ -1,5 +1,6 @@
 package com.ufps.cryptobot.domain.rest.contract;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CryptoPrice {
+
+    @JsonAlias("date")
     private String date;
-    private int price;
+
+    @JsonAlias("price")
+    private double price;
 }

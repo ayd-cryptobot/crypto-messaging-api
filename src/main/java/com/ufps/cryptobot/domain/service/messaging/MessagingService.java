@@ -2,6 +2,7 @@ package com.ufps.cryptobot.domain.service.messaging;
 
 import com.pengrad.telegrambot.model.request.*;
 import com.ufps.cryptobot.controller.rest.contract.DiffuseMessage;
+import com.ufps.cryptobot.domain.consts.TelegramCommands;
 import com.ufps.cryptobot.domain.persistence.entity.User;
 import com.ufps.cryptobot.domain.persistence.repository.UserRepository;
 import com.ufps.cryptobot.provider.telegram.contract.ImageMessage;
@@ -23,9 +24,9 @@ public class MessagingService implements MessagingServiceI {
     };
 
     private final String[][] cryptosKeyboardTemplate = {
-            {"Bitcoin", "Ethereum", "Dogecoin"},
-            {"Cardano", "Litecoin", "Tether"},
-            {"Binance coin", "Polkadot", "Ripple"}
+            {TelegramCommands.bitcoin, TelegramCommands.ethereum, TelegramCommands.dogecoin},
+            {TelegramCommands.cardano, TelegramCommands.litecoin, TelegramCommands.tether},
+            {TelegramCommands.binanceCoin, TelegramCommands.polkadot, TelegramCommands.ripple}
     };
 
     public MessagingService(MessagingProviderI provider, UserRepository userRepository) {
@@ -79,7 +80,7 @@ public class MessagingService implements MessagingServiceI {
 
         Keyboard keyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton("login").loginUrl(
-                        new LoginUrl("https://e4c3-181-132-0-23.ngrok.io/messaging/login")
+                        new LoginUrl("https://da63-181-132-0-23.ngrok.io/messaging/login")
                                 .botUsername("@UfpsTestBot")
                 )
         );

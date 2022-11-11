@@ -7,12 +7,11 @@ import com.ufps.cryptobot.domain.service.exchange.ExchangeHTTPRequesterI;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Component
 public class ExchangeHTTPRequester implements ExchangeHTTPRequesterI {
@@ -27,26 +26,28 @@ public class ExchangeHTTPRequester implements ExchangeHTTPRequesterI {
     }
 
     @Override
-    public HistoricalPriceResponse queryHistoricalPrice(QueryHistoricalPrice queryHistoricalPrice) throws IOException {
+    public HistoricalPriceResponse queryHistoricalPrice(QueryHistoricalPrice queryHistoricalPrice) throws IOException, InterruptedException {
         String url = exchangeHost + queryHistoricPriceEndpoint;
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
+        String jsonString = this.objectMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(queryHistoricalPrice);
 
-        String jsonString = this.objectMapper.writeValueAsString(queryHistoricalPrice);
+        HttpClient client = HttpClient.newHttpClient();
 
-        con.setDoOutput(true);
-        OutputStream os = con.getOutputStream();
-        os.write(jsonString.getBytes());
-        os.flush();
-        os.close();
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(jsonString);
 
-        int responseCode = con.getResponseCode();
-        System.out.println("query historical price POST Response Code :: " + responseCode);
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(body)
+                .build();
 
-        this.validateResponse(responseCode);
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        return this.objectMapper.readValue(con.getInputStream(), HistoricalPriceResponse.class);
+        System.out.println("query historical price POST Response Code :: " + response.statusCode());
+
+        this.validateResponse(response.statusCode());
+
+        return this.objectMapper.readValue(response.body(), HistoricalPriceResponse.class);
     }
 
     private void validateResponse(int responseCode) throws RuntimeException {

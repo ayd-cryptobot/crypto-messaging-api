@@ -10,7 +10,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Component
 public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
@@ -24,26 +28,24 @@ public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
         this.objectMapper = new ObjectMapper();
     }
 
-    public void createAccount(User user) throws IOException {
+    public void createAccount(User user) throws IOException, InterruptedException {
         String url = accountsHost + createAccountEndpoint;
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-
         CreateAccount createAccount = new CreateAccount(user.getId(), user.getFirst_name(), user.getLast_name(),
                 user.getUsername(), "cliente");
         String jsonString = this.objectMapper.writeValueAsString(createAccount);
 
-        con.setDoOutput(true);
-        OutputStream os = con.getOutputStream();
-        os.write(jsonString.getBytes());
-        os.flush();
-        os.close();
+        HttpClient client = HttpClient.newHttpClient();
 
-        int responseCode = con.getResponseCode();
-        System.out.println("Create account POST Response Code :: " + responseCode);
+        HttpRequest request =  HttpRequest.newBuilder(URI.create(url))
+                .header("accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                .build();
 
-        this.validateResponse(responseCode);
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Create account POST Response Code :: " + response.statusCode());
+
+        this.validateResponse(response.statusCode());
     }
 
     public void validateResponse(int responseCode) throws RuntimeException {

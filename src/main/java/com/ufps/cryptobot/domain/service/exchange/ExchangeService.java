@@ -22,7 +22,7 @@ public class ExchangeService implements ExchangeServiceI {
     }
 
     @Override
-    public void cryptoHistoricalPrice(Message message, String crypto) throws IOException {
+    public void cryptoHistoricalPrice(Message message, String crypto) throws IOException, InterruptedException {
         QueryHistoricalPrice queryHistoricalPrice = new QueryHistoricalPrice(crypto, 7);
 
         HistoricalPriceResponse historicalPrice = this.exchangeHTTPRequester.queryHistoricalPrice(queryHistoricalPrice);

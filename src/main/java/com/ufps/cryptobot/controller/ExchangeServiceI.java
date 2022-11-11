@@ -6,5 +6,5 @@ import java.io.IOException;
 
 public interface ExchangeServiceI {
 
-    void cryptoHistoricalPrice(Message message, String crypto) throws IOException;
+    void cryptoHistoricalPrice(Message message, String crypto) throws IOException, InterruptedException;
 }

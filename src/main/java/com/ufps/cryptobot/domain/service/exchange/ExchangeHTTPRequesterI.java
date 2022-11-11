@@ -7,5 +7,5 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 public interface ExchangeHTTPRequesterI {
-    public HistoricalPriceResponse queryHistoricalPrice(QueryHistoricalPrice queryHistoricalPrice) throws IOException;
+    public HistoricalPriceResponse queryHistoricalPrice(QueryHistoricalPrice queryHistoricalPrice) throws IOException, InterruptedException;
 }

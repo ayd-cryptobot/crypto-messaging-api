@@ -11,6 +11,7 @@ import com.ufps.cryptobot.domain.consts.TelegramCommands;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -18,6 +19,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("messaging")
@@ -96,15 +99,17 @@ public class MessagesController {
             return new ResponseEntity<>("Error publishing message", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     @GetMapping("/login")
-    public ResponseEntity<Object> telegramAuth(@RequestParam String id, @RequestParam(name = "first_name") String firstName,
-                                               @RequestParam String username, @RequestParam(name = "auth_date") String authDate,
-                                               @RequestParam String hash) {
+    public RedirectView telegramAuth(@RequestParam String id, @RequestParam(name = "first_name") String firstName,
+                                     @RequestParam String username, @RequestParam(name = "auth_date") String authDate,
+                                     @RequestParam String hash) {
         String dataCheckString = "auth_date=" + authDate + "\n" +
                 "first_name=" + firstName + "\n" +
                 "id=" + id + "\n" +
@@ -123,14 +128,23 @@ public class MessagesController {
 
             if (hash.equals(resultStr)) {
                 System.out.println("auth successfully done");
+                //TODO validar que exista el usuario
+
+
             } else {
-                return new ResponseEntity<>("OK", HttpStatus.FORBIDDEN);
+                return new RedirectView();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok("ok");
+        String JWTToken = "02i3ygvf0uv345g0y834v5g790";
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("token", JWTToken);
+
+        RedirectView response = new RedirectView("https://89cb-179-32-178-138.ngrok.io");
+        response.setAttributesMap(attributes);
+        return response;
     }
 
     private String bytesToHex(byte[] hash) {

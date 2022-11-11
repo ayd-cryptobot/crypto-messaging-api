@@ -9,15 +9,15 @@ public final class TelegramCommands {
     public static final String checkHistoricalPriceOfACryptoMessage = "Check historical price of a crypto";
     public static final String checkNewsOfACrypto = "Check news of a crypto";
 
-    public static final String bitcoin = "Bitcoin";
-    public static final String ethereum = "Ethereum";
-    public static final String dogecoin = "Dogecoin";
-    public static final String cardano = "Cardano";
-    public static final String litecoin = "Litecoin";
-    public static final String tether = "Tether";
-    public static final String binanceCoin = "Binance coin";
-    public static final String polkadot = "Polkadot";
-    public static final String ripple = "Ripple";
+    public static final String bitcoin = "bitcoin";
+    public static final String ethereum = "ethereum";
+    public static final String dogecoin = "dogecoin";
+    public static final String cardano = "cardano";
+    public static final String litecoin = "litecoin";
+    public static final String tether = "tether";
+    public static final String binanceCoin = "binancecoin";
+    public static final String polkadot = "polkadot";
+    public static final String ripple = "ripple";
 
     private TelegramCommands() {
 

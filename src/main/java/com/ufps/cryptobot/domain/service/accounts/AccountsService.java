@@ -22,7 +22,7 @@ public class AccountsService implements AccountsServiceI {
     }
 
     @Override
-    public void callAccountsToRegisterAccount(User user) throws IOException {
+    public void callAccountsToRegisterAccount(User user) throws IOException, InterruptedException {
         if (!this.userRepository.existsByTelegramID(user.getId())) {
             this.accountsHTTPRequester.createAccount(user);
         }

@@ -6,5 +6,5 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 public interface AccountsHTTPRequesterI {
-    public void createAccount(User user) throws IOException;
+    public void createAccount(User user) throws IOException, InterruptedException;
 }
