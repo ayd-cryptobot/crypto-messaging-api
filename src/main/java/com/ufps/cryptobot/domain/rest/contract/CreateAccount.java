@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateAccount {
-    private Long id;
+    private Long telegramID;
     private String firstName;
     private String lastName;
     private String username;

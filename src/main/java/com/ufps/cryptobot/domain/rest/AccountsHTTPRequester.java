@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -32,13 +29,17 @@ public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
         String url = accountsHost + createAccountEndpoint;
         CreateAccount createAccount = new CreateAccount(user.getId(), user.getFirst_name(), user.getLast_name(),
                 user.getUsername(), "cliente");
-        String jsonString = this.objectMapper.writeValueAsString(createAccount);
+        String jsonString = this.objectMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(createAccount);
 
         HttpClient client = HttpClient.newHttpClient();
 
-        HttpRequest request =  HttpRequest.newBuilder(URI.create(url))
-                .header("accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(jsonString);
+
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(body)
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
