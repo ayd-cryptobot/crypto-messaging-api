@@ -2,9 +2,9 @@ CREATE DATABASE `micromessaging` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016
 
 CREATE TABLE `micromessaging`.`user` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
-  `telegram_id` INT NOT NULL,
+  `telegram_id` BIGINT NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
-  `last_name` VARCHAR(45) NOT NULL,
+  `last_name` VARCHAR(45),
   `email` VARCHAR(45) NULL,
   `username` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`user_id`),

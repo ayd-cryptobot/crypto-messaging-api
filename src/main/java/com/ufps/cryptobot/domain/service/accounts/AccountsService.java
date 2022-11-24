@@ -30,10 +30,12 @@ public class AccountsService implements AccountsServiceI {
 
     @Override
     public void saveAccount(AccountEvent accountEvent) {
-        com.ufps.cryptobot.domain.persistence.entity.User user = new com.ufps.cryptobot.domain.persistence.entity.User(
-                accountEvent.getTelegramID(), accountEvent.getFirstName(), accountEvent.getLastName(), accountEvent.getUsername());
+        if (!this.userRepository.existsByTelegramID(accountEvent.getTelegramID())) {
+            com.ufps.cryptobot.domain.persistence.entity.User user = new com.ufps.cryptobot.domain.persistence.entity.User(
+                    accountEvent.getTelegramID(), accountEvent.getFirstName(), accountEvent.getLastName(), accountEvent.getUsername());
 
-        this.userRepository.save(user);
+            this.userRepository.save(user);
+        }
     }
 
     @Override
