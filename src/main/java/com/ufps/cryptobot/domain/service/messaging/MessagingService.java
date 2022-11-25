@@ -17,10 +17,11 @@ public class MessagingService implements MessagingServiceI {
 
     private MessagingProviderI provider;
     private UserRepository userRepository;
+    private static final String FRONTEND_HOST = System.getenv("FRONTEND_HOST");
 
     private final String[][] replyHomeKeyboardTemplate = {
             {"Manage my cryptos", "Manage my account"},
-            {"Check historical price of a crypto", "Check news of a crypto"}
+            {"Check historical price of a crypto", "Check news"}
     };
 
     private final String[][] cryptosKeyboardTemplate = {
@@ -80,10 +81,22 @@ public class MessagingService implements MessagingServiceI {
 
         Keyboard keyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton("login").loginUrl(
-                        new LoginUrl("https://da63-181-132-0-23.ngrok.io/messaging/login")
+                        //new LoginUrl("https://da63-181-132-0-23.ngrok.io/messaging/login") usar para probar autenticación de token de telegram
+                        new LoginUrl(FRONTEND_HOST + "/client/profile/edit-profile")
                                 .botUsername("@UfpsTestBot")
                 )
         );
+
+        this.provider.sendMessage(message, keyboard);
+    }
+
+    @Override
+    public void sendCheckNewsLink(Message message) {
+        String url = FRONTEND_HOST + "/client/news";
+        message.setText("The best news here");
+
+        Keyboard keyboard = new InlineKeyboardMarkup(
+                new InlineKeyboardButton("Crypto News").url(url));
 
         this.provider.sendMessage(message, keyboard);
     }

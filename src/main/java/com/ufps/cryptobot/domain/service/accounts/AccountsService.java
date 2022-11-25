@@ -40,6 +40,12 @@ public class AccountsService implements AccountsServiceI {
 
     @Override
     public void updateAccount(AccountEvent accountEvent) {
+        if (!this.userRepository.existsByTelegramID(accountEvent.getTelegramID())) {
+            this.saveAccount(accountEvent);
+
+            return;
+        }
+
         this.userRepository.updateFirstNameAndLastNameAndEmailByTelegramID(
                 accountEvent.getFirstName(), accountEvent.getLastName(), accountEvent.getEmail(),
                 accountEvent.getTelegramID()

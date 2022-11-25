@@ -69,14 +69,13 @@ public class MessagesController {
                     this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your cryptos here");
                     break;
                 case TelegramCommands.manageAccountMessage:
-                    //TODO manage login and return redirection
                     this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your account");
                     break;
                 case TelegramCommands.checkHistoricalPriceOfACryptoMessage:
                     this.messagingService.sendCryptosKeyboard(update.getMessage());
                     break;
-                case TelegramCommands.checkNewsOfACrypto:
-                    //TODO return redirection to the news
+                case TelegramCommands.checkNewsMessage:
+                    this.messagingService.sendCheckNewsLink(update.getMessage());
                     break;
                 case TelegramCommands.bitcoin:
                 case TelegramCommands.ethereum:
@@ -137,7 +136,7 @@ public class MessagesController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        //Se redirige con un JWT token fake
         String JWTToken = "02i3ygvf0uv345g0y834v5g790";
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("token", JWTToken);

@@ -13,4 +13,6 @@ public interface MessagingServiceI {
     void sendLoginInlineKeyboard(Message message, String text);
 
     void diffuseMessage(DiffuseMessage diffuseMessage);
+
+    void sendCheckNewsLink(Message message);
 }

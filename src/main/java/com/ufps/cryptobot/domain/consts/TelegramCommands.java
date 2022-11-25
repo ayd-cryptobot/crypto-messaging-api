@@ -7,7 +7,7 @@ public final class TelegramCommands {
     public static final String manageCryptosMessage = "Manage my cryptos";
     public static final String manageAccountMessage = "Manage my account";
     public static final String checkHistoricalPriceOfACryptoMessage = "Check historical price of a crypto";
-    public static final String checkNewsOfACrypto = "Check news of a crypto";
+    public static final String checkNewsMessage = "Check news";
 
     public static final String bitcoin = "bitcoin";
     public static final String ethereum = "ethereum";
