@@ -6,7 +6,7 @@ CREATE TABLE `micromessaging`.`user` (
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45),
   `email` VARCHAR(45) NULL,
-  `username` VARCHAR(45) NOT NULL,
+  `username` VARCHAR(45),
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `telegram_id_UNIQUE` (`telegram_id` ASC) VISIBLE,
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)

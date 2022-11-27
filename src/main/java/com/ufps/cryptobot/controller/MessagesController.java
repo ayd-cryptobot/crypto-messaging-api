@@ -65,11 +65,10 @@ public class MessagesController {
         try {
             switch (update.getMessage().getText()) {
                 case TelegramCommands.manageCryptosMessage:
-                    //TODO manage login and return redirection
-                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your cryptos here");
+                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your cryptos here", "manage-cryptos");
                     break;
                 case TelegramCommands.manageAccountMessage:
-                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your account");
+                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your account", "manage-account");
                     break;
                 case TelegramCommands.checkHistoricalPriceOfACryptoMessage:
                     this.messagingService.sendCryptosKeyboard(update.getMessage());
