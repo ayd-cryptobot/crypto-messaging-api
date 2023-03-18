@@ -62,43 +62,45 @@ public class MessagesController {
 
     @PostMapping("/update")
     public ResponseEntity<String> getUpdate(@RequestBody Update update) {
-        try {
-            switch (update.getMessage().getText()) {
-                case TelegramCommands.manageCryptosMessage:
-                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your cryptos here", "manage-cryptos");
-                    break;
-                case TelegramCommands.manageAccountMessage:
-                    this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your account", "manage-account");
-                    break;
-                case TelegramCommands.checkHistoricalPriceOfACryptoMessage:
-                    this.messagingService.sendCryptosKeyboard(update.getMessage());
-                    break;
-                case TelegramCommands.checkNewsMessage:
-                    this.messagingService.sendCheckNewsLink(update.getMessage());
-                    break;
-                case TelegramCommands.bitcoin:
-                case TelegramCommands.ethereum:
-                case TelegramCommands.dogecoin:
-                case TelegramCommands.cardano:
-                case TelegramCommands.litecoin:
-                case TelegramCommands.tether:
-                case TelegramCommands.binanceCoin:
-                case TelegramCommands.polkadot:
-                case TelegramCommands.ripple:
-                    this.exchangeServiceI.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
-                    this.messagingService.sendHomeKeyboard(update.getMessage());
-                    break;
-                case TelegramCommands.startCommand:
-                    this.accountsServiceI.callAccountsToRegisterAccount(update.getMessage().getFrom());
-                default:
-                    this.messagingService.sendHomeKeyboard(update.getMessage());
+        if (update.getMessage() != null) {
+            try {
+                switch (update.getMessage().getText()) {
+                    case TelegramCommands.manageCryptosMessage:
+                        this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your cryptos here", "manage-cryptos");
+                        break;
+                    case TelegramCommands.manageAccountMessage:
+                        this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to manage your account", "manage-account");
+                        break;
+                    case TelegramCommands.checkHistoricalPriceOfACryptoMessage:
+                        this.messagingService.sendCryptosKeyboard(update.getMessage());
+                        break;
+                    case TelegramCommands.checkNewsMessage:
+                        this.messagingService.sendCheckNewsLink(update.getMessage());
+                        break;
+                    case TelegramCommands.bitcoin:
+                    case TelegramCommands.ethereum:
+                    case TelegramCommands.dogecoin:
+                    case TelegramCommands.cardano:
+                    case TelegramCommands.litecoin:
+                    case TelegramCommands.tether:
+                    case TelegramCommands.binanceCoin:
+                    case TelegramCommands.polkadot:
+                    case TelegramCommands.ripple:
+                        this.exchangeServiceI.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
+                        this.messagingService.sendHomeKeyboard(update.getMessage());
+                        break;
+                    case TelegramCommands.startCommand:
+                        this.accountsServiceI.callAccountsToRegisterAccount(update.getMessage().getFrom());
+                    default:
+                        this.messagingService.sendHomeKeyboard(update.getMessage());
+                }
+            } catch (ApiException e) {
+                return new ResponseEntity<>("Error publishing message", HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (IOException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (ApiException e) {
-            return new ResponseEntity<>("Error publishing message", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IOException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
