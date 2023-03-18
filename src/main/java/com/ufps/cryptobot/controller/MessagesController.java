@@ -26,18 +26,22 @@ import java.util.Map;
 @RequestMapping("messaging")
 public class MessagesController {
 
-    private PubSubEventMapper pubSubEventMapper;
+    private final PubSubEventMapper pubSubEventMapper;
 
-    private AccountsServiceI accountsServiceI;
-    private MessagingServiceI messagingService;
-    private ExchangeServiceI exchangeServiceI;
+    private final AccountsServiceI accountsService;
+    private final MessagingServiceI messagingService;
+    private final ExchangeServiceI exchangeService;
+    private final QAServiceI qaService;
 
 
-    public MessagesController(PubSubEventMapper pubSubEventMapper, AccountsServiceI accountsServiceI, MessagingServiceI messagingService, ExchangeServiceI exchangeServiceI) {
+    public MessagesController(PubSubEventMapper pubSubEventMapper, AccountsServiceI accountsServiceI,
+                              MessagingServiceI messagingService, ExchangeServiceI exchangeServiceI,
+                              QAServiceI qaServiceI) {
         this.pubSubEventMapper = pubSubEventMapper;
-        this.accountsServiceI = accountsServiceI;
+        this.accountsService = accountsServiceI;
         this.messagingService = messagingService;
-        this.exchangeServiceI = exchangeServiceI;
+        this.exchangeService = exchangeServiceI;
+        this.qaService = qaServiceI;
     }
 
     @PostMapping("/message/send")
@@ -86,12 +90,13 @@ public class MessagesController {
                     case TelegramCommands.binanceCoin:
                     case TelegramCommands.polkadot:
                     case TelegramCommands.ripple:
-                        this.exchangeServiceI.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
+                        this.exchangeService.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
                         this.messagingService.sendHomeKeyboard(update.getMessage());
                         break;
                     case TelegramCommands.startCommand:
-                        this.accountsServiceI.callAccountsToRegisterAccount(update.getMessage().getFrom());
+                        this.accountsService.callAccountsToRegisterAccount(update.getMessage().getFrom());
                     default:
+                        //TODO consultar QA
                         this.messagingService.sendHomeKeyboard(update.getMessage());
                 }
             } catch (ApiException e) {

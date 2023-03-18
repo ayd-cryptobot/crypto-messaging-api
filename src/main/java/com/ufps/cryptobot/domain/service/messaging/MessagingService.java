@@ -57,9 +57,6 @@ public class MessagingService implements MessagingServiceI {
 
     @Override
     public void sendHomeKeyboard(Message message) {
-        String invitationMessage = "Hi " + message.getFrom().getFirst_name() + "! Select an option to start";
-        message.setText(invitationMessage);
-
         Keyboard replyKeyBoardMarkup = new ReplyKeyboardMarkup(replyHomeKeyboardTemplate).
                 inputFieldPlaceholder("select an option");
 
