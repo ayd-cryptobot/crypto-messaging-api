@@ -1,9 +1,9 @@
 package com.ufps.cryptobot.domain.service.exchange;
 
 import com.ufps.cryptobot.controller.ExchangeServiceI;
-import com.ufps.cryptobot.domain.rest.contract.CryptoPrice;
-import com.ufps.cryptobot.domain.rest.contract.HistoricalPriceResponse;
-import com.ufps.cryptobot.domain.rest.contract.QueryHistoricalPrice;
+import com.ufps.cryptobot.domain.rest.contract.response.CryptoPrice;
+import com.ufps.cryptobot.domain.rest.contract.response.HistoricalPriceResponse;
+import com.ufps.cryptobot.domain.rest.contract.query.QueryHistoricalPrice;
 import com.ufps.cryptobot.domain.service.messaging.MessagingProviderI;
 import com.ufps.cryptobot.provider.telegram.contract.Message;
 import org.springframework.stereotype.Service;
@@ -13,8 +13,8 @@ import java.io.IOException;
 @Service
 public class ExchangeService implements ExchangeServiceI {
 
-    private MessagingProviderI messagingProvider;
-    private ExchangeHTTPRequesterI exchangeHTTPRequester;
+    private final MessagingProviderI messagingProvider;
+    private final ExchangeHTTPRequesterI exchangeHTTPRequester;
 
     public ExchangeService(MessagingProviderI messagingProvider, ExchangeHTTPRequesterI exchangeHTTPRequester) {
         this.messagingProvider = messagingProvider;

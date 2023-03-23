@@ -1,4 +1,4 @@
-package com.ufps.cryptobot.domain.rest.contract;
+package com.ufps.cryptobot.domain.rest.contract.response;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;

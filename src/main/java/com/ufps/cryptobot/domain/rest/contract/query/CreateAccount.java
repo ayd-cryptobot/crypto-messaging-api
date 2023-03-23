@@ -1,4 +1,4 @@
-package com.ufps.cryptobot.domain.rest.contract;
+package com.ufps.cryptobot.domain.rest.contract.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.ufps.cryptobot.domain.rest.contract;
+package com.ufps.cryptobot.domain.rest.contract.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryHistoricalPrice {
-    private String crypto;
-    private int dateRange;
+public class QueryGenerateText {
+    private String prompt;
 }

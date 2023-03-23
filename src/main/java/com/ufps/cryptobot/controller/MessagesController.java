@@ -96,7 +96,8 @@ public class MessagesController {
                     case TelegramCommands.startCommand:
                         this.accountsService.callAccountsToRegisterAccount(update.getMessage().getFrom());
                     default:
-                        //TODO consultar QA
+                        this.qaService.sendQuestionToAI(update.getMessage());
+                        update.getMessage().setText("¿Qué más necesitas?");
                         this.messagingService.sendHomeKeyboard(update.getMessage());
                 }
             } catch (ApiException e) {

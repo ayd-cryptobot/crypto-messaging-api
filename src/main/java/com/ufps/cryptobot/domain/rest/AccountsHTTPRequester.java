@@ -1,7 +1,7 @@
 package com.ufps.cryptobot.domain.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ufps.cryptobot.domain.rest.contract.CreateAccount;
+import com.ufps.cryptobot.domain.rest.contract.query.CreateAccount;
 import com.ufps.cryptobot.domain.service.accounts.AccountsHTTPRequesterI;
 import com.ufps.cryptobot.provider.telegram.contract.User;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
     private static final String createAccountEndpoint = "/accounts/create";
     private static final String accountsHost = System.getenv("ACCOUNTS_HOST");
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public AccountsHTTPRequester() {
         this.objectMapper = new ObjectMapper();
