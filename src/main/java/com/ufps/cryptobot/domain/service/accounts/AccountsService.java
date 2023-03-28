@@ -1,22 +1,19 @@
 package com.ufps.cryptobot.domain.service.accounts;
 
-import com.sun.jdi.event.ExceptionEvent;
 import com.ufps.cryptobot.controller.rest.contract.AccountEvent;
 import com.ufps.cryptobot.controller.rest.contract.Auth;
 import com.ufps.cryptobot.provider.telegram.contract.User;
 import com.ufps.cryptobot.controller.AccountsServiceI;
 import com.ufps.cryptobot.domain.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
+import java.util.Base64;
 
 @Service
 public class AccountsService implements AccountsServiceI {
@@ -69,38 +66,50 @@ public class AccountsService implements AccountsServiceI {
     public boolean authAccount(Auth auth) throws NoSuchAlgorithmException, InvalidKeyException {
         String dataCheckString =
                 "auth_date=" + auth.getAuthDate() + "\n" +
-                "first_name=" + auth.getFirstName() + "\n" +
-                "id=" + auth.getId() + "\n" +
-                "username=" + auth.getUsername();
+                        "first_name=" + auth.getFirstName() + "\n" +
+                        "id=" + auth.getId() + "\n" +
+                        "username=" + auth.getUsername();
 
-            SecretKeySpec secretKey = new SecretKeySpec(
-                    MessageDigest.getInstance("SHA-256").digest("5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o".getBytes(StandardCharsets.UTF_8)
-                    ), "HmacSHA256");
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(secretKey);
 
-            byte[] result = mac.doFinal(dataCheckString.getBytes(StandardCharsets.UTF_8));
+        String secretKey =  sha256("5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o");
 
-            String resultStr = this.bytesToHex(result);
+        if (toHex(hmacSha256(secretKey,dataCheckString)).equals(auth.getHash())) {
+            System.out.println("denied  authorization");
+            return false;
+        }
 
-            if (!auth.getHash().equals(resultStr)) {
-                System.out.println("denied  authorization");
-                return false;
-            }
-
-            System.out.println("auth successfully done");
-            return true;
+        System.out.println("auth successfully done");
+        return true;
     }
 
-    private String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
+    private String sha256(String input) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(input.getBytes());
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            hexString.append(String.format("%02x", b));
         }
         return hexString.toString();
+    }
+
+    private String hmacSha256(String secretKey, String message) throws NoSuchAlgorithmException, InvalidKeyException {
+        String algorithm = "HmacSHA256";
+        SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), algorithm);
+        Mac mac = Mac.getInstance(algorithm);
+        mac.init(keySpec);
+        byte[] hash = mac.doFinal(message.getBytes());
+        return Base64.getEncoder().encodeToString(hash);
+    }
+
+    private String toHex(String input) {
+        char[] hexArray = "0123456789abcdef".toCharArray();
+        byte[] bytes = input.getBytes();
+        char[] hexChars = new char[bytes.length * 2];
+        for (int i = 0; i < bytes.length; i++) {
+            int value = bytes[i] & 0xFF;
+            hexChars[i * 2] = hexArray[value >>> 4];
+            hexChars[i * 2 + 1] = hexArray[value & 0x0F];
+        }
+        return new String(hexChars);
     }
 }

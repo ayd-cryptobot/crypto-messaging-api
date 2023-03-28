@@ -92,8 +92,8 @@ public class MessagingService implements MessagingServiceI {
 
         Keyboard keyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton("login").loginUrl(
-                        //new LoginUrl("https://da63-181-132-0-23.ngrok.io/messaging/login") usar para probar autenticación de token de telegram
-                        new LoginUrl(FRONTEND_HOST + endpoint).botUsername("@UfpsTestBot")
+                        new LoginUrl("https://3d09-200-116-155-80.ngrok.io/messaging/login") //usar para probar autenticación de token de telegram
+                        //new LoginUrl(FRONTEND_HOST + endpoint).botUsername("@UfpsTestBot")
                 )
         );
 

@@ -114,30 +114,4 @@ public class MessagesController {
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
-
-    @GetMapping("/login")
-    public RedirectView telegramAuth(@RequestParam String id, @RequestParam(name = "first_name") String firstName,
-                                     @RequestParam String username, @RequestParam(name = "auth_date") String authDate,
-                                     @RequestParam String hash) {
-        Auth auth = new Auth(id, firstName, username, authDate, hash);
-
-        boolean isAuthorized = false;
-        try {
-            isAuthorized = this.accountsService.authAccount(auth);
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-        if (!isAuthorized) {
-            //TODO bad redirect
-        }
-
-        //TODO good redirect
-        Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("t-token", hash);
-
-        RedirectView response = new RedirectView("https://89cb-179-32-178-138.ngrok.io");
-        response.setAttributesMap(attributes);
-        return response;
-    }
 }
