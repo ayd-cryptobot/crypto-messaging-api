@@ -3,6 +3,7 @@ package com.ufps.cryptobot.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.gax.rpc.ApiException;
 import com.ufps.cryptobot.controller.mapper.PubSubEventMapper;
+import com.ufps.cryptobot.controller.rest.contract.Auth;
 import com.ufps.cryptobot.controller.rest.contract.DiffuseMessage;
 import com.ufps.cryptobot.provider.telegram.contract.Message;
 import com.ufps.cryptobot.provider.pubsub.contract.PubSubMessage;
@@ -18,7 +19,9 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,52 +119,25 @@ public class MessagesController {
     public RedirectView telegramAuth(@RequestParam String id, @RequestParam(name = "first_name") String firstName,
                                      @RequestParam String username, @RequestParam(name = "auth_date") String authDate,
                                      @RequestParam String hash) {
-        String dataCheckString = "auth_date=" + authDate + "\n" +
-                "first_name=" + firstName + "\n" +
-                "id=" + id + "\n" +
-                "username=" + username;
+        Auth auth = new Auth(id, firstName, username, authDate, hash);
 
+        boolean isAuthorized = false;
         try {
-            SecretKeySpec secretKey = new SecretKeySpec(
-                    MessageDigest.getInstance("SHA-256").digest("5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o".getBytes(StandardCharsets.UTF_8)
-                    ), "HmacSHA256");
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(secretKey);
-
-            byte[] result = mac.doFinal(dataCheckString.getBytes(StandardCharsets.UTF_8));
-
-            String resultStr = this.bytesToHex(result);
-
-            if (hash.equals(resultStr)) {
-                System.out.println("auth successfully done");
-                //TODO validar que exista el usuario
-
-
-            } else {
-                return new RedirectView();
-            }
-        } catch (Exception e) {
+            isAuthorized = this.accountsService.authAccount(auth);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }
-        //Se redirige con un JWT token fake
-        String JWTToken = "02i3ygvf0uv345g0y834v5g790";
+
+        if (!isAuthorized) {
+            //TODO bad redirect
+        }
+
+        //TODO good redirect
         Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("token", JWTToken);
+        attributes.put("t-token", hash);
 
         RedirectView response = new RedirectView("https://89cb-179-32-178-138.ngrok.io");
         response.setAttributesMap(attributes);
         return response;
-    }
-
-    private String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
-        }
-        return hexString.toString();
     }
 }
