@@ -1,0 +1,10 @@
+runtime: java11
+env_variables:
+  MYSQL_HOST: "35.243.221.27"
+  MYSQL_USER: "root"
+  MYSQL_PASSWORD: "xEo;NP^xjL.<SEqm"
+  BOT_TOKEN: "5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o"
+  ACCOUNTS_HOST: ""
+  EXCHANGE_HOST: ""
+  FRONTEND_HOST: ""
+  QA_HOST: ""
