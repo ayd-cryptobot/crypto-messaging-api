@@ -8,7 +8,7 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <groupId>com.ufps</groupId>
     <artifactId>crypto-bot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
