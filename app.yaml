@@ -8,7 +8,6 @@ env_variables:
   EXCHANGE_HOST: ""
   FRONTEND_HOST: ""
   QA_HOST: ""
-instance_class: F1
 env: standard
 entrypoint: java -jar target/crypto-bot-0.0.1-SNAPSHOT.jar
 basic_scaling:
