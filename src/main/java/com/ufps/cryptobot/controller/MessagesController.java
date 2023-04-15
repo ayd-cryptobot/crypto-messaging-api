@@ -94,10 +94,14 @@ public class MessagesController {
                     case TelegramCommands.polkadot:
                     case TelegramCommands.ripple:
                         this.exchangeService.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
+                        update.getMessage().setText("precios!");
                         this.messagingService.sendHomeKeyboard(update.getMessage());
                         break;
                     case TelegramCommands.startCommand:
                         this.accountsService.callAccountsToRegisterAccount(update.getMessage().getFrom());
+                        update.getMessage().setText("¡Bienvenido!");
+                        this.messagingService.sendHomeKeyboard(update.getMessage());
+                        break;
                     default:
                         this.qaService.sendQuestionToAI(update.getMessage());
                         update.getMessage().setText("¿Qué más necesitas?");

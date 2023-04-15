@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
 
     private static final String createAccountEndpoint = "/accounts/create";
-    private static final String accountsHost = System.getenv("ACCOUNTS_HOST");
+    private static final String accountsHost = "https://accounts-dot-cryptobot-345516.ue.r.appspot.com";
 
     private final ObjectMapper objectMapper;
 

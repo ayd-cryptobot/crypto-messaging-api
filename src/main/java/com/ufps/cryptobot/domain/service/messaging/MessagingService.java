@@ -17,7 +17,7 @@ public class MessagingService implements MessagingServiceI {
 
     private MessagingProviderI provider;
     private UserRepository userRepository;
-    private static final String FRONTEND_HOST = System.getenv("FRONTEND_HOST");
+    private static final String FRONTEND_HOST = "https://cryptobotfrontend.netlify.app";
     private static final String frontendManageCryptosEndpoint = "/client/crypto";
     private static final String frontendManageAccountEndpoint = "/client/profile/edit-profile";
 
@@ -92,8 +92,8 @@ public class MessagingService implements MessagingServiceI {
 
         Keyboard keyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton("login").loginUrl(
-                        new LoginUrl("https://3d09-200-116-155-80.ngrok.io/messaging/login") //usar para probar autenticación de token de telegram
-                        //new LoginUrl(FRONTEND_HOST + endpoint).botUsername("@UfpsTestBot")
+                        //new LoginUrl("https://3d09-200-116-155-80.ngrok.io/messaging/login") //usar para probar autenticación de token de telegram
+                        new LoginUrl(FRONTEND_HOST + endpoint).botUsername("@UfpsTestBot")
                 )
         );
 

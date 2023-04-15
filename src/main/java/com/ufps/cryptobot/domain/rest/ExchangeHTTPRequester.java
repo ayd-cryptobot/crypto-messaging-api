@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 public class ExchangeHTTPRequester implements ExchangeHTTPRequesterI {
 
     private static final String queryHistoricPriceEndpoint = "/exchange/crypto/price";
-    private static final String exchangeHost = System.getenv("EXCHANGE_HOST");
+    private static final String exchangeHost = "https://cryptobot-345516.ue.r.appspot.com";
 
     private final ObjectMapper objectMapper;
 

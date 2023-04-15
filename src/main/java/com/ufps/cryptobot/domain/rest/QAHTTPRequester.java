@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 public class QAHTTPRequester implements QAHTTPRequesterI{
 
     private static final String iaGenerateTextEndPoint = "/qa/ia/text-generator";
-    private static final String qaHost = System.getenv("QA_HOST");
+    private static final String qaHost = "https://qa-dot-cryptobot-345516.ue.r.appspot.com";
 
     private final ObjectMapper objectMapper;
 

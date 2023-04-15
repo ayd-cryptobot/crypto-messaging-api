@@ -2,14 +2,15 @@ runtime: java11
 env_variables:
   MYSQL_HOST: "35.243.221.27"
   MYSQL_USER: "root"
-  MYSQL_PASSWORD: "xEo;NP^xjL.<SEqm"
+  MYSQL_PASSWORD: "%aZK2B|gDby8l<TK"
   BOT_TOKEN: "5252956900:AAHoHCzSUpRH6ZLJ8M8kK8OvODMcrNZF5-o"
-  ACCOUNTS_HOST: ""
-  EXCHANGE_HOST: ""
-  FRONTEND_HOST: ""
-  QA_HOST: ""
+  ACCOUNTS_HOST: "https://accounts-dot-cryptobot-345516.ue.r.appspot.com"
+  EXCHANGE_HOST: "https://cryptobot-345516.ue.r.appspot.com"
+  FRONTEND_HOST: "https://cryptobotfrontend.netlify.app"
+  QA_HOST: "https://qa-dot-cryptobot-345516.ue.r.appspot.com"
 env: standard
 entrypoint: java -jar target/crypto-bot-0.0.1-SNAPSHOT.jar
 basic_scaling:
   max_instances: 1
   idle_timeout: 10m
+service: messaging
