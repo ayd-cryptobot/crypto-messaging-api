@@ -20,6 +20,10 @@ public class Provider implements MessagingProviderI {
         this.bot = new TelegramBot(System.getenv("BOT_TOKEN"));
     }
 
+    public Provider(TelegramBot telegramBot) {
+        this.bot = telegramBot;
+    }
+
     public SendResponse sendMessage(Message message, Keyboard keyboard) {
         SendMessage sendMessage = new SendMessage(message.getChat().getId(), message.getText());
 
