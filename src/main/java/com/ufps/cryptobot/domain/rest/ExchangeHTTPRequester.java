@@ -1,6 +1,7 @@
 package com.ufps.cryptobot.domain.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufps.cryptobot.domain.rest.contract.response.CryptoPrice;
 import com.ufps.cryptobot.domain.rest.contract.response.HistoricalPriceResponse;
 import com.ufps.cryptobot.domain.rest.contract.query.QueryHistoricalPrice;
 import com.ufps.cryptobot.domain.service.exchange.ExchangeHTTPRequesterI;
@@ -45,7 +46,12 @@ public class ExchangeHTTPRequester implements ExchangeHTTPRequesterI {
 
         System.out.println("query historical price POST Response Code :: " + response.statusCode());
 
-        this.validateResponse(response.statusCode());
+        try {
+            this.validateResponse(response.statusCode());
+        }catch(RuntimeException e){
+            return new HistoricalPriceResponse("Error getting the historical price", "", new CryptoPrice[]{});
+        }
+
 
         return this.objectMapper.readValue(response.body(), HistoricalPriceResponse.class);
     }

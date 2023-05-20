@@ -49,15 +49,16 @@ public class AccountsHTTPRequester implements AccountsHTTPRequesterI {
         this.validateResponse(response.statusCode());
     }
 
-    public void validateResponse(int responseCode) throws RuntimeException {
+    public void validateResponse(int responseCode) {
         if (responseCode == HttpStatus.ALREADY_REPORTED.value()) {
             System.out.println("Account already created");
+
             return;
         }
         if (responseCode != HttpStatus.OK.value()) {
             System.out.println("create account POST request got a bad response");
 
-            throw new RuntimeException("Bad status code response: " + responseCode);
+            return;
         }
 
         System.out.println("Account created");
