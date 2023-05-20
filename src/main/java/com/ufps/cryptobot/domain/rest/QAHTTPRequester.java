@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 @Component
 public class QAHTTPRequester implements QAHTTPRequesterI{
@@ -39,13 +40,18 @@ public class QAHTTPRequester implements QAHTTPRequesterI{
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .header("Content-Type", "application/json")
                 .POST(body)
+                .timeout(Duration.ofSeconds(10))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         System.out.println("request generate text POST Response Code :: " + response.statusCode());
 
-        this.validateResponse(response.statusCode());
+        try{
+            this.validateResponse(response.statusCode());
+        }catch(RuntimeException e){
+            return new TextGeneratedResponse("error generating text");
+        }
 
         return this.objectMapper.readValue(response.body(), TextGeneratedResponse.class);
     }
