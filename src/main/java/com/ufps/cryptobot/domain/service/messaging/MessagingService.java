@@ -20,6 +20,7 @@ public class MessagingService implements MessagingServiceI {
     private static final String FRONTEND_HOST = "https://cryptobotfrontend.netlify.app";
     private static final String frontendManageCryptosEndpoint = "/client/crypto";
     private static final String frontendManageAccountEndpoint = "/client/profile/edit-profile";
+    private static final String frontendHistoricalPriceEndpoint = "/client/chart?cryptoName=";
 
     private final String[][] replyHomeKeyboardTemplate = {
             {"Manage my cryptos", "Manage my account"},
@@ -76,8 +77,6 @@ public class MessagingService implements MessagingServiceI {
 
     @Override
     public void sendLoginInlineKeyboard(Message message, String text, String view) {
-        message.setText(text);
-
         String endpoint = "";
         switch (view){
             case "manage-account":{
@@ -88,7 +87,13 @@ public class MessagingService implements MessagingServiceI {
                 endpoint = frontendManageCryptosEndpoint;
                 break;
             }
+            case "historical-price":{
+                endpoint = frontendHistoricalPriceEndpoint+message.getText();
+                break;
+            }
         }
+
+        message.setText(text);
 
         Keyboard keyboard = new InlineKeyboardMarkup(
                 new InlineKeyboardButton("login").loginUrl(

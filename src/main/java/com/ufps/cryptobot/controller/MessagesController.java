@@ -3,7 +3,6 @@ package com.ufps.cryptobot.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.gax.rpc.ApiException;
 import com.ufps.cryptobot.controller.mapper.PubSubEventMapper;
-import com.ufps.cryptobot.controller.rest.contract.Auth;
 import com.ufps.cryptobot.controller.rest.contract.DiffuseMessage;
 import com.ufps.cryptobot.provider.telegram.contract.Message;
 import com.ufps.cryptobot.provider.pubsub.contract.PubSubMessage;
@@ -12,18 +11,9 @@ import com.ufps.cryptobot.domain.consts.TelegramCommands;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.view.RedirectView;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("messaging")
@@ -33,17 +23,14 @@ public class MessagesController {
 
     private final AccountsServiceI accountsService;
     private final MessagingServiceI messagingService;
-    private final ExchangeServiceI exchangeService;
     private final QAServiceI qaService;
 
 
     public MessagesController(PubSubEventMapper pubSubEventMapper, AccountsServiceI accountsServiceI,
-                              MessagingServiceI messagingService, ExchangeServiceI exchangeServiceI,
-                              QAServiceI qaServiceI) {
+                              MessagingServiceI messagingService, QAServiceI qaServiceI) {
         this.pubSubEventMapper = pubSubEventMapper;
         this.accountsService = accountsServiceI;
         this.messagingService = messagingService;
-        this.exchangeService = exchangeServiceI;
         this.qaService = qaServiceI;
     }
 
@@ -93,9 +80,8 @@ public class MessagesController {
                     case TelegramCommands.binanceCoin:
                     case TelegramCommands.polkadot:
                     case TelegramCommands.ripple:
-                        this.exchangeService.cryptoHistoricalPrice(update.getMessage(), update.getMessage().getText());
+                        this.messagingService.sendLoginInlineKeyboard(update.getMessage(), "Login to watch prices here", "historical-price");
                         update.getMessage().setText("precios!");
-                        this.messagingService.sendHomeKeyboard(update.getMessage());
                         break;
                     case TelegramCommands.startCommand:
                         this.accountsService.callAccountsToRegisterAccount(update.getMessage().getFrom());
@@ -108,8 +94,12 @@ public class MessagesController {
                         this.messagingService.sendHomeKeyboard(update.getMessage());
                 }
             } catch (ApiException e) {
+                System.out.println("message: " + e.getMessage());
+
                 return new ResponseEntity<>("Error publishing message", HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (IOException e) {
+                System.out.println("message: " + e.getMessage());
+
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (InterruptedException e) {
                 e.printStackTrace();
